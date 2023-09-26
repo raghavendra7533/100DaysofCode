@@ -5,10 +5,13 @@ import turtle as turtle_module
 turtle_module.colormode(255)
 tim = turtle_module.Turtle()
 
-tim.setheading(225)
-tim.penup()
-tim.forward(300)
-tim.setheading(0)
+
+def start():
+    tim.setheading(225)
+    tim.penup()
+    tim.forward(300)
+    tim.setheading(0)
+
 
 def linear_draw():
     tim.setheading(0)
@@ -17,10 +20,12 @@ def linear_draw():
         tim.penup()
         tim.forward(50)
 
+
 def move_up():
     tim.backward(50)
     tim.setheading(90)
     tim.forward(50)
+
 
 def linear_draw_right():
     tim.setheading(180)
@@ -29,7 +34,9 @@ def linear_draw_right():
         tim.penup()
         tim.forward(50)
 
+
 def main():
+    start()
     for _ in range(5):
         linear_draw()
         move_up()
