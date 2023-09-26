@@ -14,3 +14,11 @@ quiz = QuizBrain(question_bank)
 
 while quiz.still_has_questions():
     quiz.next_question()
+
+if not quiz.still_has_questions():
+    print("You've completed the quiz")
+    if quiz.score > 10:
+        print("Awesome!")
+        print(f"Your final score was {quiz.score}/{quiz.question_number}")
+    else:
+        print("Better luck next time!")
