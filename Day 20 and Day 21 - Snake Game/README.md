@@ -42,6 +42,7 @@ To move the snake, I created another `.py` file where I started coding the chara
 - I declared another constant called `MOVE_DISTANCE` and set it to the speed of the snake
 
 ```py
+#snake.py
 from turtle import Turtle  
   
 STARTING_POSITIONS = [(0,0),(-20,0),(-40,0)]  
@@ -66,4 +67,25 @@ class Snake:
             new_y = self.segments[seg_num - 1].ycor()  
             self.segments[seg_num].goto(new_x, new_y)  
         self.segments[0].forward(MOVE_DISTANCE)
+```
+
+```py
+#main.py
+from turtle import Turtle, Screen  
+import time  
+from snake import Snake  
+  
+screen = Screen()  
+screen.setup(width=600, height=600)  
+screen.bgcolor("black")  
+screen.title("Snake Game")  
+screen.tracer(0)  
+  
+snake = Snake()  
+  
+game_is_on = True  
+while game_is_on:  
+    screen.update()  
+    time.sleep(0.1)  
+    snake.move()
 ```
