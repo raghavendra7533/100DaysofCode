@@ -42,7 +42,6 @@ To move the snake, I created another `.py` file where I started coding the chara
 - I declared another constant called `MOVE_DISTANCE` and set it to the speed of the snake
 
 ```py
-#snake.py
 from turtle import Turtle  
   
 STARTING_POSITIONS = [(0,0),(-20,0),(-40,0)]  
@@ -69,8 +68,8 @@ class Snake:
         self.segments[0].forward(MOVE_DISTANCE)
 ```
 
+and the main file was
 ```py
-#main.py
 from turtle import Turtle, Screen  
 import time  
 from snake import Snake  
@@ -81,11 +80,77 @@ screen.bgcolor("black")
 screen.title("Snake Game")  
 screen.tracer(0)  
   
-snake = Snake()  
+snake = Snake()
+
+screen.listen()
+screen.onkey(snake.up, "Up")
+screen.onkey(snake.down, "Down")
+screen.onkey(snake.right, "Right")
+screen.onkey(snake.left, "Left")
   
 game_is_on = True  
 while game_is_on:  
     screen.update()  
     time.sleep(0.1)  
     snake.move()
+```
+
+## Class Inheritance
+In order to inherit the characteristics of another class, we must specify the class we are inheriting from within a pair of parenthesis during the initialisation.
+#### Syntax
+```py
+class Fish(Animal): #here 'Animal' is the class we are inheriting from
+	def __init__(self):
+		super().__init__() # here we are initialising all the characteristics of the super class, in this case, all the characteristics of the 'Animal' class.
+```
+
+#### Example code
+```py
+class Animal:
+	def __init__(self):
+		self.num_eyes = 2
+	def breathe(self):
+		print("Inhale, Exhale")
+
+class Fish(Animal):
+	def __init__(self):
+		super().__init__()
+	def breathe(self):	
+		super().breathe()
+		print("Doing this underwater.")
+	def swim(self):
+		print("moving in water.")
+
+nemo = Fish()
+nemo.swim() # output: "moving in water"
+nemo.breathe() # output: "Inhale, Exhale \n Doing this underwater."
+print(nemo.num_eyes) # output: "2"
+```
+
+## Creating `Scoreboard.py` to keep score
+The scoreboard is also a Turtle, first importing Turtle from the library, and declaring the constants like fonts and alignment.
+```py
+from turtle import Turtle  
+  
+  
+ALIGNMENT = "center"  
+FONT = ("Courier", 24, "normal")  
+  
+class Scoreboard(Turtle):  
+    def __init__(self):  
+        super().__init__()  
+        self.score = 0  
+        self.color("white")  
+        self.penup()  
+        self.goto(0, 270)  
+        self.hideturtle()  
+        self.update_scoreboard()  
+  
+    def update_scoreboard(self):  
+        self.write(f"Score: {self.score}", align=ALIGNMENT, font=FONT)  
+  
+    def increase_score(self):  
+        self.score += 1  
+        self.clear()  
+        self.update_scoreboard()
 ```
