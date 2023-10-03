@@ -7,6 +7,7 @@
 6. Create scoreboard
 7. Detect collision with wall
 8. Detect collision with tail
+9. Full Code
 
 ## Creating `main.py` with the essentials
 ```py
