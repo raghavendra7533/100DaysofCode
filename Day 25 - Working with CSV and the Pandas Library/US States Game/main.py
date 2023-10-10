@@ -36,6 +36,8 @@ while len(guessed_state) < 50 and is_game_on:
             y = int(state_data.y)
             t.goto(x, y)
             t.write(f"{answer_state}", font=FONT)
+        elif answer_state == "exit":
+            break
         else:
             continue
     else:
