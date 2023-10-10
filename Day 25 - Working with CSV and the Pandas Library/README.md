@@ -86,7 +86,6 @@ print(data["temp"].mean())
 print(data["temp"].max())
 """This method gives the max of the Series"""
 ```
-## d
 If I want to get hold of the row where the day is Monday.
 ```py 
 import pandas
