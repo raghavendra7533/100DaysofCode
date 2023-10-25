@@ -1,7 +1,7 @@
 # import smtplib
 #
-# my_email = "raghavpromo7533@gmail.com"
-# password = "vxlvkqdujosmxdbj"
+# my_email = ""
+# password = ""
 #
 # with smtplib.SMTP("smtp.gmail.com") as connection:
 #     connection.starttls()
@@ -40,8 +40,8 @@ import random
 
 now = dt.datetime.now()
 weekday = now.weekday()
-my_email = "raghavpromo7533@gmail.com"
-password = "vxlvkqdujosmxdbj"
+my_email = ""
+password = ""
 
 if weekday == 2:
     with open("quotes.txt") as quote_file:
