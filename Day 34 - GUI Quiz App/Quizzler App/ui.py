@@ -39,10 +39,14 @@ class QuizInterface:
         self.window.mainloop()
 
     def get_next_question(self):
-        self.score_label.config(text=f"")
-        self.canvas.config(bg="white")
-        q_text = self.quiz.next_question()
-        self.canvas.itemconfig(self.question_text, text=q_text)
+        if self.quiz.still_has_questions():
+            self.score_label.config(text=f"")
+            self.canvas.config(bg="white")
+            q_text = self.quiz.next_question()
+            self.canvas.itemconfig(self.question_text, text=q_text)
+            self.score_label.config(text=f"{self.quiz.score}/10")
+        else:
+            self.canvas.itemconfig(self.question_text, text="GameOver")
 
     def true_pressed(self):
         self.give_feedback(self.quiz.check_answer("True"))
