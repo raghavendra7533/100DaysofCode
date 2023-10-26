@@ -1,0 +1,5 @@
+Hi [NAME],
+Welcome to Moolya Software Testing! We are very glad to have you on board as the [DESIGNATION].
+
+Thank You,
+[YOUR NAME]
