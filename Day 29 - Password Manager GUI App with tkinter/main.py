@@ -1,7 +1,6 @@
 from tkinter import *
 import random
 import string
-import pandas
 
 
 # ---------------------------- PASSWORD GENERATOR ------------------------------- #
