@@ -39,6 +39,13 @@ PIXELA_PIXEL_CREATION_DATA = {
 # response = requests.post(url=graph_endpoint, json=PIXELA_GRAPH_CREATION_PARAMS, headers=PIXELA_HEADER)
 
 # Creating a pixel
-pixel_creation_endpoint = f"{PIXELA_ENDPOINT}/{PIXELA_USERNAME}/graphs/{PIXELA_GRAPH_ID}"
-response = requests.post(url=pixel_creation_endpoint, json=PIXELA_PIXEL_CREATION_DATA, headers=PIXELA_HEADER)
-print(response.json())
+# pixel_creation_endpoint = f"{PIXELA_ENDPOINT}/{PIXELA_USERNAME}/graphs/{PIXELA_GRAPH_ID}"
+# response = requests.post(url=pixel_creation_endpoint, json=PIXELA_PIXEL_CREATION_DATA, headers=PIXELA_HEADER)
+# print(response.json())
+
+# Deleting a graph
+update_endpoint = f"{PIXELA_ENDPOINT}/{PIXELA_USERNAME}/graphs/{PIXELA_GRAPH_ID}/{today_strf}"
+new_pixela_data = {
+    "quantity": "1",
+}
+request = requests.put(url=update_endpoint, json=new_pixela_data, headers=PIXELA_HEADER)
