@@ -1,0 +1,187 @@
+{% extends "base.html" %}
+
+{% block title %}Dashboard - LinkedIn Auto-Applicant{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-12 mb-4">
+        <h2>Dashboard</h2>
+        <p class="text-muted">Welcome to LinkedIn Auto-Applicant. Set up your profile and start applying!</p>
+    </div>
+</div>
+
+<!-- Stats Cards -->
+<div class="row mb-4">
+    <div class="col-md-3">
+        <div class="card stat-card">
+            <div class="stat-number">{{ stats.total }}</div>
+            <div class="stat-label">Total Applications</div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card stat-card">
+            <div class="stat-number text-success">{{ stats.applied }}</div>
+            <div class="stat-label">Applied</div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card stat-card">
+            <div class="stat-number text-danger">{{ stats.failed }}</div>
+            <div class="stat-label">Failed</div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card stat-card">
+            <div class="stat-number text-warning">{{ stats.skipped }}</div>
+            <div class="stat-label">Skipped</div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <!-- Quick Setup -->
+    <div class="col-md-8">
+        <div class="card mb-4">
+            <div class="card-header bg-white">
+                <h5 class="mb-0"><i class="bi bi-rocket-takeoff"></i> Quick Setup Checklist</h5>
+            </div>
+            <div class="card-body">
+                <div class="list-group list-group-flush">
+                    <div class="list-group-item d-flex justify-content-between align-items-center">
+                        <div>
+                            <i class="bi bi-{{ 'check-circle-fill text-success' if profile.personal_info.first_name else 'circle text-muted' }}"></i>
+                            <span class="ms-2">Complete your personal information</span>
+                        </div>
+                        <a href="{{ url_for('profile') }}" class="btn btn-sm btn-outline-primary">Edit Profile</a>
+                    </div>
+                    <div class="list-group-item d-flex justify-content-between align-items-center">
+                        <div>
+                            <i class="bi bi-{{ 'check-circle-fill text-success' if profile.resume_path else 'circle text-muted' }}"></i>
+                            <span class="ms-2">Upload your resume</span>
+                        </div>
+                        <a href="{{ url_for('profile') }}" class="btn btn-sm btn-outline-primary">Upload</a>
+                    </div>
+                    <div class="list-group-item d-flex justify-content-between align-items-center">
+                        <div>
+                            <i class="bi bi-{{ 'check-circle-fill text-success' if profile.education else 'circle text-muted' }}"></i>
+                            <span class="ms-2">Add education history</span>
+                        </div>
+                        <a href="{{ url_for('education') }}" class="btn btn-sm btn-outline-primary">Add Education</a>
+                    </div>
+                    <div class="list-group-item d-flex justify-content-between align-items-center">
+                        <div>
+                            <i class="bi bi-{{ 'check-circle-fill text-success' if profile.work_experience else 'circle text-muted' }}"></i>
+                            <span class="ms-2">Add work experience</span>
+                        </div>
+                        <a href="{{ url_for('experience') }}" class="btn btn-sm btn-outline-primary">Add Experience</a>
+                    </div>
+                    <div class="list-group-item d-flex justify-content-between align-items-center">
+                        <div>
+                            <i class="bi bi-{{ 'check-circle-fill text-success' if preferences.job_titles else 'circle text-muted' }}"></i>
+                            <span class="ms-2">Set job preferences</span>
+                        </div>
+                        <a href="{{ url_for('preferences') }}" class="btn btn-sm btn-outline-primary">Set Preferences</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Recent Applications -->
+        <div class="card">
+            <div class="card-header bg-white d-flex justify-content-between align-items-center">
+                <h5 class="mb-0"><i class="bi bi-clock-history"></i> Recent Applications</h5>
+                <a href="{{ url_for('applications') }}" class="btn btn-sm btn-outline-primary">View All</a>
+            </div>
+            <div class="card-body">
+                {% if recent %}
+                <div class="table-responsive">
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th>Job Title</th>
+                                <th>Company</th>
+                                <th>Status</th>
+                                <th>Date</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for app in recent %}
+                            <tr>
+                                <td>{{ app.job_title }}</td>
+                                <td>{{ app.company_name }}</td>
+                                <td>
+                                    <span class="badge bg-{{ 'success' if app.status == 'Applied' else 'danger' if app.status == 'Failed' else 'warning' }}">
+                                        {{ app.status }}
+                                    </span>
+                                </td>
+                                <td>{{ app.applied_at[:10] }}</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                {% else %}
+                <p class="text-muted text-center py-4">No applications yet. Start applying to see your history here!</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    <!-- Sidebar -->
+    <div class="col-md-4">
+        <div class="sidebar">
+            <!-- Start Applying Card -->
+            <div class="card mb-4">
+                <div class="card-body text-center">
+                    <h5><i class="bi bi-lightning-charge text-warning"></i> Ready to Apply?</h5>
+                    <p class="text-muted small">Make sure your profile is complete before starting.</p>
+                    <a href="{{ url_for('run') }}" class="btn btn-primary btn-lg w-100">
+                        <i class="bi bi-play-fill"></i> Start Auto-Apply
+                    </a>
+                </div>
+            </div>
+
+            <!-- Profile Summary -->
+            <div class="card mb-4">
+                <div class="card-header bg-white">
+                    <h5 class="mb-0"><i class="bi bi-person-badge"></i> Profile Summary</h5>
+                </div>
+                <div class="card-body">
+                    {% if profile.personal_info.first_name %}
+                    <p class="mb-1"><strong>{{ profile.personal_info.first_name }} {{ profile.personal_info.last_name }}</strong></p>
+                    <p class="text-muted small mb-2">{{ profile.personal_info.email }}</p>
+                    <p class="mb-1"><i class="bi bi-geo-alt"></i> {{ profile.personal_info.city }}, {{ profile.personal_info.state }}</p>
+                    <p class="mb-0"><i class="bi bi-briefcase"></i> {{ profile.years_of_experience }} years experience</p>
+                    {% else %}
+                    <p class="text-muted">Complete your profile to see summary</p>
+                    {% endif %}
+                </div>
+            </div>
+
+            <!-- Job Preferences Summary -->
+            <div class="card">
+                <div class="card-header bg-white">
+                    <h5 class="mb-0"><i class="bi bi-search"></i> Search Preferences</h5>
+                </div>
+                <div class="card-body">
+                    {% if preferences.job_titles %}
+                    <p class="mb-1"><strong>Looking for:</strong></p>
+                    <p class="text-muted small">{{ preferences.job_titles | join(', ') }}</p>
+                    {% if preferences.locations %}
+                    <p class="mb-1"><strong>Locations:</strong></p>
+                    <p class="text-muted small">{{ preferences.locations | join(', ') }}</p>
+                    {% endif %}
+                    <p class="mb-0">
+                        <span class="badge bg-{{ 'success' if preferences.easy_apply_only else 'secondary' }}">
+                            Easy Apply {{ 'Only' if preferences.easy_apply_only else 'Optional' }}
+                        </span>
+                    </p>
+                    {% else %}
+                    <p class="text-muted">Set your job preferences to see summary</p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

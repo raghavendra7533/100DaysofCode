@@ -1,0 +1,121 @@
+{% extends "base.html" %}
+
+{% block title %}Education - LinkedIn Auto-Applicant{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-12 mb-4">
+        <h2>Education</h2>
+        <p class="text-muted">Add your educational background.</p>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-8">
+        <!-- Existing Education -->
+        {% if profile.education %}
+        <div class="card mb-4">
+            <div class="card-header bg-white">
+                <h5 class="mb-0"><i class="bi bi-mortarboard"></i> Your Education</h5>
+            </div>
+            <div class="list-group list-group-flush">
+                {% for edu in profile.education %}
+                <div class="list-group-item">
+                    <div class="d-flex justify-content-between align-items-start">
+                        <div>
+                            <h6 class="mb-1">{{ edu.degree }} in {{ edu.field_of_study }}</h6>
+                            <p class="mb-1 text-primary">{{ edu.school_name }}</p>
+                            <small class="text-muted">
+                                {{ edu.start_date }} - {{ edu.end_date }}
+                                {% if edu.gpa %} | GPA: {{ edu.gpa }}{% endif %}
+                            </small>
+                        </div>
+                        <form method="POST" class="ms-2">
+                            <input type="hidden" name="action" value="delete">
+                            <input type="hidden" name="index" value="{{ loop.index0 }}">
+                            <button type="submit" class="btn btn-sm btn-outline-danger">
+                                <i class="bi bi-trash"></i>
+                            </button>
+                        </form>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+        {% endif %}
+
+        <!-- Add Education Form -->
+        <div class="card">
+            <div class="card-header bg-white">
+                <h5 class="mb-0"><i class="bi bi-plus-circle"></i> Add Education</h5>
+            </div>
+            <div class="card-body">
+                <form method="POST">
+                    <input type="hidden" name="action" value="add">
+                    <div class="mb-3">
+                        <label class="form-label required">School Name</label>
+                        <input type="text" class="form-control" name="school_name"
+                               placeholder="University of Example" required>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label required">Degree</label>
+                            <select class="form-select" name="degree" required>
+                                <option value="">Select degree...</option>
+                                <option value="High School Diploma">High School Diploma</option>
+                                <option value="Associate">Associate's Degree</option>
+                                <option value="Bachelor">Bachelor's Degree</option>
+                                <option value="Master">Master's Degree</option>
+                                <option value="PhD">PhD</option>
+                                <option value="MBA">MBA</option>
+                                <option value="Certificate">Certificate</option>
+                            </select>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label required">Field of Study</label>
+                            <input type="text" class="form-control" name="field_of_study"
+                                   placeholder="Computer Science" required>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-4 mb-3">
+                            <label class="form-label">Start Date</label>
+                            <input type="text" class="form-control" name="start_date"
+                                   placeholder="Sep 2018">
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <label class="form-label">End Date</label>
+                            <input type="text" class="form-control" name="end_date"
+                                   placeholder="May 2022">
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <label class="form-label">GPA</label>
+                            <input type="text" class="form-control" name="gpa"
+                                   placeholder="3.8">
+                        </div>
+                    </div>
+                    <button type="submit" class="btn btn-primary">
+                        <i class="bi bi-plus-lg"></i> Add Education
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-4">
+        <div class="card">
+            <div class="card-body">
+                <h6><i class="bi bi-lightbulb text-warning"></i> Tips</h6>
+                <ul class="small text-muted">
+                    <li>Add all relevant education</li>
+                    <li>Include certifications if relevant</li>
+                    <li>Most recent education first</li>
+                </ul>
+                <a href="{{ url_for('profile') }}" class="btn btn-outline-primary w-100">
+                    <i class="bi bi-arrow-left"></i> Back to Profile
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

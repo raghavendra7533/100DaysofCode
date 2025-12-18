@@ -1,0 +1,256 @@
+{% extends "base.html" %}
+
+{% block title %}Profile - LinkedIn Auto-Applicant{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-12 mb-4">
+        <h2>Your Profile</h2>
+        <p class="text-muted">Fill in your details that will be used to auto-fill job applications.</p>
+    </div>
+</div>
+
+<form method="POST" enctype="multipart/form-data">
+    <div class="row">
+        <div class="col-md-8">
+            <!-- Personal Information -->
+            <div class="card mb-4">
+                <div class="card-header bg-white">
+                    <h5 class="mb-0"><i class="bi bi-person"></i> Personal Information</h5>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label required">First Name</label>
+                            <input type="text" class="form-control" name="first_name"
+                                   value="{{ profile.personal_info.first_name }}" required>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label required">Last Name</label>
+                            <input type="text" class="form-control" name="last_name"
+                                   value="{{ profile.personal_info.last_name }}" required>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label required">Email</label>
+                            <input type="email" class="form-control" name="email"
+                                   value="{{ profile.personal_info.email }}" required>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label required">Phone</label>
+                            <input type="tel" class="form-control" name="phone"
+                                   value="{{ profile.personal_info.phone }}" required>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-4 mb-3">
+                            <label class="form-label">City</label>
+                            <input type="text" class="form-control" name="city"
+                                   value="{{ profile.personal_info.city }}">
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <label class="form-label">State</label>
+                            <input type="text" class="form-control" name="state"
+                                   value="{{ profile.personal_info.state }}">
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <label class="form-label">Zip Code</label>
+                            <input type="text" class="form-control" name="zip_code"
+                                   value="{{ profile.personal_info.zip_code }}">
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Country</label>
+                        <input type="text" class="form-control" name="country"
+                               value="{{ profile.personal_info.country or 'United States' }}">
+                    </div>
+                </div>
+            </div>
+
+            <!-- Social Links -->
+            <div class="card mb-4">
+                <div class="card-header bg-white">
+                    <h5 class="mb-0"><i class="bi bi-link-45deg"></i> Social Links</h5>
+                </div>
+                <div class="card-body">
+                    <div class="mb-3">
+                        <label class="form-label">LinkedIn URL</label>
+                        <input type="url" class="form-control" name="linkedin_url"
+                               value="{{ profile.personal_info.linkedin_url }}"
+                               placeholder="https://www.linkedin.com/in/yourprofile">
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Portfolio/Website URL</label>
+                        <input type="url" class="form-control" name="portfolio_url"
+                               value="{{ profile.personal_info.portfolio_url }}"
+                               placeholder="https://yourportfolio.com">
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">GitHub URL</label>
+                        <input type="url" class="form-control" name="github_url"
+                               value="{{ profile.personal_info.github_url }}"
+                               placeholder="https://github.com/yourusername">
+                    </div>
+                </div>
+            </div>
+
+            <!-- Application Defaults -->
+            <div class="card mb-4">
+                <div class="card-header bg-white">
+                    <h5 class="mb-0"><i class="bi bi-clipboard-check"></i> Application Defaults</h5>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Years of Experience</label>
+                            <input type="number" class="form-control" name="years_of_experience"
+                                   value="{{ profile.years_of_experience }}" min="0" max="50">
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Highest Education</label>
+                            <select class="form-select" name="highest_education">
+                                <option value="">Select...</option>
+                                <option value="High School" {{ 'selected' if profile.highest_education == 'High School' }}>High School</option>
+                                <option value="Associate" {{ 'selected' if profile.highest_education == 'Associate' }}>Associate Degree</option>
+                                <option value="Bachelor" {{ 'selected' if profile.highest_education == 'Bachelor' }}>Bachelor's Degree</option>
+                                <option value="Master" {{ 'selected' if profile.highest_education == 'Master' }}>Master's Degree</option>
+                                <option value="PhD" {{ 'selected' if profile.highest_education == 'PhD' }}>PhD</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Work Authorization</label>
+                            <select class="form-select" name="work_authorization">
+                                <option value="Yes" {{ 'selected' if profile.work_authorization == 'Yes' }}>Yes, authorized to work</option>
+                                <option value="No" {{ 'selected' if profile.work_authorization == 'No' }}>No</option>
+                            </select>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Requires Sponsorship</label>
+                            <select class="form-select" name="requires_sponsorship">
+                                <option value="No" {{ 'selected' if profile.requires_sponsorship == 'No' }}>No</option>
+                                <option value="Yes" {{ 'selected' if profile.requires_sponsorship == 'Yes' }}>Yes</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Willing to Relocate</label>
+                            <select class="form-select" name="willing_to_relocate">
+                                <option value="Yes" {{ 'selected' if profile.willing_to_relocate == 'Yes' }}>Yes</option>
+                                <option value="No" {{ 'selected' if profile.willing_to_relocate == 'No' }}>No</option>
+                            </select>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Start Date Availability</label>
+                            <select class="form-select" name="start_date_availability">
+                                <option value="Immediately" {{ 'selected' if profile.start_date_availability == 'Immediately' }}>Immediately</option>
+                                <option value="2 weeks" {{ 'selected' if profile.start_date_availability == '2 weeks' }}>2 weeks notice</option>
+                                <option value="1 month" {{ 'selected' if profile.start_date_availability == '1 month' }}>1 month notice</option>
+                                <option value="Flexible" {{ 'selected' if profile.start_date_availability == 'Flexible' }}>Flexible</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Salary Expectation</label>
+                        <input type="text" class="form-control" name="salary_expectation"
+                               value="{{ profile.salary_expectation }}"
+                               placeholder="e.g., $80,000 - $100,000">
+                    </div>
+                </div>
+            </div>
+
+            <!-- Skills -->
+            <div class="card mb-4">
+                <div class="card-header bg-white">
+                    <h5 class="mb-0"><i class="bi bi-tools"></i> Skills</h5>
+                </div>
+                <div class="card-body">
+                    <div class="mb-3">
+                        <label class="form-label">Skills (comma-separated)</label>
+                        <textarea class="form-control" name="skills" rows="3"
+                                  placeholder="Python, JavaScript, React, SQL, Machine Learning">{{ profile.skills | join(', ') }}</textarea>
+                        <div class="form-text">Enter your skills separated by commas</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Sidebar -->
+        <div class="col-md-4">
+            <div class="sidebar">
+                <!-- Resume Upload -->
+                <div class="card mb-4">
+                    <div class="card-header bg-white">
+                        <h5 class="mb-0"><i class="bi bi-file-earmark-pdf"></i> Resume</h5>
+                    </div>
+                    <div class="card-body">
+                        {% if profile.resume_path %}
+                        <div class="alert alert-success mb-3">
+                            <i class="bi bi-check-circle"></i> Resume uploaded
+                            <br><small>{{ profile.resume_path | basename }}</small>
+                        </div>
+                        {% endif %}
+                        <div class="mb-3">
+                            <label class="form-label">Upload Resume (PDF)</label>
+                            <input type="file" class="form-control" name="resume" accept=".pdf,.doc,.docx">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Cover Letter -->
+                <div class="card mb-4">
+                    <div class="card-header bg-white">
+                        <h5 class="mb-0"><i class="bi bi-file-text"></i> Cover Letter Template</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="mb-3">
+                            <textarea class="form-control" name="cover_letter" rows="8"
+                                      placeholder="Dear Hiring Manager,
+
+I am excited to apply for the [Position] role at [Company]...">{{ profile.cover_letter_template }}</textarea>
+                            <div class="form-text">Use [Position] and [Company] as placeholders</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Quick Links -->
+                <div class="card mb-4">
+                    <div class="card-header bg-white">
+                        <h5 class="mb-0"><i class="bi bi-link"></i> Quick Links</h5>
+                    </div>
+                    <div class="list-group list-group-flush">
+                        <a href="{{ url_for('education') }}" class="list-group-item list-group-item-action">
+                            <i class="bi bi-mortarboard"></i> Manage Education
+                            {% if profile.education %}
+                            <span class="badge bg-primary float-end">{{ profile.education | length }}</span>
+                            {% endif %}
+                        </a>
+                        <a href="{{ url_for('experience') }}" class="list-group-item list-group-item-action">
+                            <i class="bi bi-briefcase"></i> Manage Experience
+                            {% if profile.work_experience %}
+                            <span class="badge bg-primary float-end">{{ profile.work_experience | length }}</span>
+                            {% endif %}
+                        </a>
+                        <a href="{{ url_for('custom_answers') }}" class="list-group-item list-group-item-action">
+                            <i class="bi bi-chat-dots"></i> Custom Answers
+                            {% if profile.custom_answers %}
+                            <span class="badge bg-primary float-end">{{ profile.custom_answers | length }}</span>
+                            {% endif %}
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Save Button -->
+                <div class="d-grid">
+                    <button type="submit" class="btn btn-primary btn-lg">
+                        <i class="bi bi-check-lg"></i> Save Profile
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+{% endblock %}

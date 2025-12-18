@@ -1,0 +1,179 @@
+{% extends "base.html" %}
+
+{% block title %}Run Auto-Apply - LinkedIn Auto-Applicant{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-12 mb-4">
+        <h2>Run Auto-Apply</h2>
+        <p class="text-muted">Start the automated job application process.</p>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-8">
+        <!-- Status Card -->
+        <div class="card mb-4" id="status-card">
+            <div class="card-header bg-white">
+                <h5 class="mb-0"><i class="bi bi-activity"></i> Status</h5>
+            </div>
+            <div class="card-body">
+                <div class="d-flex align-items-center mb-3">
+                    <div class="me-3">
+                        {% if state.running %}
+                        <span class="spinner-border text-primary" role="status"></span>
+                        {% else %}
+                        <i class="bi bi-circle-fill {{ 'text-success' if state.status == 'completed' else 'text-secondary' }}" style="font-size: 1.5rem;"></i>
+                        {% endif %}
+                    </div>
+                    <div>
+                        <h5 class="mb-0" id="status-text">
+                            {% if state.running %}
+                            Running: {{ state.status }}
+                            {% elif state.status == 'completed' %}
+                            Completed!
+                            {% else %}
+                            Ready to start
+                            {% endif %}
+                        </h5>
+                        {% if state.results %}
+                        <p class="text-muted mb-0">
+                            Applied: {{ state.results.applied }} | Failed: {{ state.results.failed }}
+                        </p>
+                        {% endif %}
+                    </div>
+                </div>
+
+                {% if state.running %}
+                <div class="progress mb-3" style="height: 25px;">
+                    <div class="progress-bar progress-bar-striped progress-bar-animated"
+                         role="progressbar" style="width: {{ state.progress }}%;"
+                         id="progress-bar">{{ state.progress }}%</div>
+                </div>
+                <form action="{{ url_for('stop') }}" method="POST">
+                    <button type="submit" class="btn btn-danger">
+                        <i class="bi bi-stop-fill"></i> Stop
+                    </button>
+                </form>
+                {% endif %}
+            </div>
+        </div>
+
+        <!-- Start Form -->
+        {% if not state.running %}
+        <div class="card">
+            <div class="card-header bg-white">
+                <h5 class="mb-0"><i class="bi bi-play-circle"></i> Start Auto-Apply</h5>
+            </div>
+            <div class="card-body">
+                <form method="POST">
+                    <div class="alert alert-warning">
+                        <i class="bi bi-exclamation-triangle"></i>
+                        <strong>Important:</strong> LinkedIn may detect automated behavior.
+                        Use this tool responsibly and don't exceed reasonable application limits.
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label required">LinkedIn Email</label>
+                        <input type="email" class="form-control" name="linkedin_email"
+                               placeholder="your.email@example.com" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label required">LinkedIn Password</label>
+                        <input type="password" class="form-control" name="linkedin_password"
+                               placeholder="Your LinkedIn password" required>
+                        <div class="form-text">Your credentials are not stored and only used for this session.</div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Max Applications</label>
+                            <input type="number" class="form-control" name="max_applications"
+                                   value="25" min="1" max="100">
+                            <div class="form-text">Maximum applications per session (recommended: 25)</div>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Browser Mode</label>
+                            <div class="form-check form-switch mt-2">
+                                <input class="form-check-input" type="checkbox" name="headless" id="headless">
+                                <label class="form-check-label" for="headless">Run in background (headless)</label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary btn-lg">
+                        <i class="bi bi-play-fill"></i> Start Auto-Apply
+                    </button>
+                </form>
+            </div>
+        </div>
+        {% endif %}
+    </div>
+
+    <!-- Sidebar -->
+    <div class="col-md-4">
+        <div class="sidebar">
+            <!-- Checklist -->
+            <div class="card mb-4">
+                <div class="card-header bg-white">
+                    <h5 class="mb-0"><i class="bi bi-check2-square"></i> Pre-flight Checklist</h5>
+                </div>
+                <div class="list-group list-group-flush">
+                    <div class="list-group-item">
+                        <i class="bi bi-{{ 'check-circle-fill text-success' if profile.personal_info.first_name else 'x-circle text-danger' }}"></i>
+                        Profile completed
+                    </div>
+                    <div class="list-group-item">
+                        <i class="bi bi-{{ 'check-circle-fill text-success' if profile.resume_path else 'x-circle text-danger' }}"></i>
+                        Resume uploaded
+                    </div>
+                    <div class="list-group-item">
+                        <i class="bi bi-{{ 'check-circle-fill text-success' if preferences.job_titles else 'x-circle text-danger' }}"></i>
+                        Job preferences set
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tips -->
+            <div class="card">
+                <div class="card-header bg-white">
+                    <h5 class="mb-0"><i class="bi bi-lightbulb"></i> Tips</h5>
+                </div>
+                <div class="card-body">
+                    <ul class="small mb-0">
+                        <li class="mb-2">Keep applications under 50 per day</li>
+                        <li class="mb-2">Don't run headless first time to handle security checks</li>
+                        <li class="mb-2">Review your applications periodically</li>
+                        <li class="mb-2">Update your profile and answers as needed</li>
+                        <li>Consider pausing between sessions</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+{% if state.running %}
+<script>
+// Poll for status updates
+function updateStatus() {
+    fetch('/status')
+        .then(response => response.json())
+        .then(data => {
+            document.getElementById('status-text').textContent =
+                data.running ? 'Running: ' + data.status : (data.status === 'completed' ? 'Completed!' : 'Ready to start');
+
+            document.getElementById('progress-bar').style.width = data.progress + '%';
+            document.getElementById('progress-bar').textContent = data.progress + '%';
+
+            if (!data.running) {
+                location.reload();
+            }
+        });
+}
+
+setInterval(updateStatus, 2000);
+</script>
+{% endif %}
+{% endblock %}
