@@ -1,0 +1,122 @@
+{% extends "base.html" %}
+
+{% block title %}Work Experience - LinkedIn Auto-Applicant{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-12 mb-4">
+        <h2>Work Experience</h2>
+        <p class="text-muted">Add your professional experience.</p>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-8">
+        <!-- Existing Experience -->
+        {% if profile.work_experience %}
+        <div class="card mb-4">
+            <div class="card-header bg-white">
+                <h5 class="mb-0"><i class="bi bi-briefcase"></i> Your Experience</h5>
+            </div>
+            <div class="list-group list-group-flush">
+                {% for exp in profile.work_experience %}
+                <div class="list-group-item">
+                    <div class="d-flex justify-content-between align-items-start">
+                        <div>
+                            <h6 class="mb-1">{{ exp.job_title }}</h6>
+                            <p class="mb-1 text-primary">{{ exp.company_name }}</p>
+                            <small class="text-muted">
+                                {{ exp.location }} | {{ exp.start_date }} - {{ 'Present' if exp.is_current else exp.end_date }}
+                            </small>
+                            {% if exp.description %}
+                            <p class="mt-2 mb-0 small">{{ exp.description[:200] }}{% if exp.description|length > 200 %}...{% endif %}</p>
+                            {% endif %}
+                        </div>
+                        <form method="POST" class="ms-2">
+                            <input type="hidden" name="action" value="delete">
+                            <input type="hidden" name="index" value="{{ loop.index0 }}">
+                            <button type="submit" class="btn btn-sm btn-outline-danger">
+                                <i class="bi bi-trash"></i>
+                            </button>
+                        </form>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+        {% endif %}
+
+        <!-- Add Experience Form -->
+        <div class="card">
+            <div class="card-header bg-white">
+                <h5 class="mb-0"><i class="bi bi-plus-circle"></i> Add Experience</h5>
+            </div>
+            <div class="card-body">
+                <form method="POST">
+                    <input type="hidden" name="action" value="add">
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label required">Job Title</label>
+                            <input type="text" class="form-control" name="job_title"
+                                   placeholder="Software Engineer" required>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label required">Company Name</label>
+                            <input type="text" class="form-control" name="company_name"
+                                   placeholder="Tech Company Inc." required>
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Location</label>
+                        <input type="text" class="form-control" name="location"
+                               placeholder="San Francisco, CA">
+                    </div>
+                    <div class="row">
+                        <div class="col-md-4 mb-3">
+                            <label class="form-label">Start Date</label>
+                            <input type="text" class="form-control" name="start_date"
+                                   placeholder="Jan 2020">
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <label class="form-label">End Date</label>
+                            <input type="text" class="form-control" name="end_date"
+                                   placeholder="Dec 2023">
+                        </div>
+                        <div class="col-md-4 mb-3 d-flex align-items-end">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" name="is_current" id="is_current">
+                                <label class="form-check-label" for="is_current">Current Job</label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Description</label>
+                        <textarea class="form-control" name="description" rows="4"
+                                  placeholder="Describe your responsibilities and achievements..."></textarea>
+                    </div>
+                    <button type="submit" class="btn btn-primary">
+                        <i class="bi bi-plus-lg"></i> Add Experience
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-4">
+        <div class="card">
+            <div class="card-body">
+                <h6><i class="bi bi-lightbulb text-warning"></i> Tips</h6>
+                <ul class="small text-muted">
+                    <li>List most recent experience first</li>
+                    <li>Include key achievements</li>
+                    <li>Use action verbs in descriptions</li>
+                    <li>Quantify results when possible</li>
+                </ul>
+                <a href="{{ url_for('profile') }}" class="btn btn-outline-primary w-100">
+                    <i class="bi bi-arrow-left"></i> Back to Profile
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,107 @@
+{% extends "base.html" %}
+
+{% block title %}Custom Answers - LinkedIn Auto-Applicant{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-12 mb-4">
+        <h2>Custom Answers</h2>
+        <p class="text-muted">Add custom answers for common application questions.</p>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-8">
+        <!-- Existing Answers -->
+        {% if profile.custom_answers %}
+        <div class="card mb-4">
+            <div class="card-header bg-white">
+                <h5 class="mb-0"><i class="bi bi-chat-dots"></i> Your Custom Answers</h5>
+            </div>
+            <div class="list-group list-group-flush">
+                {% for question, answer in profile.custom_answers.items() %}
+                <div class="list-group-item">
+                    <div class="d-flex justify-content-between align-items-start">
+                        <div>
+                            <h6 class="mb-1 text-primary">{{ question }}</h6>
+                            <p class="mb-0">{{ answer }}</p>
+                        </div>
+                        <form method="POST" class="ms-2">
+                            <input type="hidden" name="action" value="delete">
+                            <input type="hidden" name="question" value="{{ question }}">
+                            <button type="submit" class="btn btn-sm btn-outline-danger">
+                                <i class="bi bi-trash"></i>
+                            </button>
+                        </form>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+        {% endif %}
+
+        <!-- Add Answer Form -->
+        <div class="card">
+            <div class="card-header bg-white">
+                <h5 class="mb-0"><i class="bi bi-plus-circle"></i> Add Custom Answer</h5>
+            </div>
+            <div class="card-body">
+                <form method="POST">
+                    <input type="hidden" name="action" value="add">
+                    <div class="mb-3">
+                        <label class="form-label required">Question Pattern</label>
+                        <input type="text" class="form-control" name="question"
+                               placeholder="why do you want to work" required>
+                        <div class="form-text">Enter keywords that identify the question (case-insensitive)</div>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label required">Answer</label>
+                        <textarea class="form-control" name="answer" rows="4"
+                                  placeholder="Your answer to this question..." required></textarea>
+                    </div>
+                    <button type="submit" class="btn btn-primary">
+                        <i class="bi bi-plus-lg"></i> Add Answer
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-4">
+        <div class="card mb-4">
+            <div class="card-body">
+                <h6><i class="bi bi-info-circle text-primary"></i> How It Works</h6>
+                <p class="small text-muted">
+                    When a question in the application contains your pattern text,
+                    the system will automatically fill in your answer.
+                </p>
+                <p class="small text-muted mb-0">
+                    For example, if you add a pattern "why interested" with an answer,
+                    it will be used for any question containing those words.
+                </p>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-header bg-white">
+                <h6 class="mb-0">Common Question Patterns</h6>
+            </div>
+            <div class="list-group list-group-flush small">
+                <div class="list-group-item">why interested in this role</div>
+                <div class="list-group-item">describe yourself</div>
+                <div class="list-group-item">greatest strength</div>
+                <div class="list-group-item">greatest weakness</div>
+                <div class="list-group-item">where do you see yourself</div>
+                <div class="list-group-item">why leaving current</div>
+                <div class="list-group-item">tell us about a time</div>
+            </div>
+        </div>
+
+        <div class="mt-3">
+            <a href="{{ url_for('profile') }}" class="btn btn-outline-primary w-100">
+                <i class="bi bi-arrow-left"></i> Back to Profile
+            </a>
+        </div>
+    </div>
+</div>
+{% endblock %}
