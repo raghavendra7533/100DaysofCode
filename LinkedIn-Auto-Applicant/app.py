@@ -279,7 +279,9 @@ def run():
         flash('Auto-apply started!', 'success')
         return redirect(url_for('run'))
 
-    return render_template('run.html', state=automation_state)
+    profile = UserProfile.load()
+    preferences = JobPreferences.load()
+    return render_template('run.html', state=automation_state, profile=profile, preferences=preferences)
 
 
 @app.route('/stop', methods=['POST'])
