@@ -190,7 +190,7 @@
                         {% if profile.resume_path %}
                         <div class="alert alert-success mb-3">
                             <i class="bi bi-check-circle"></i> Resume uploaded
-                            <br><small>{{ profile.resume_path | basename }}</small>
+                            <br><small>{{ profile.resume_path.split('/')[-1] }}</small>
                         </div>
                         {% endif %}
                         <div class="mb-3">
