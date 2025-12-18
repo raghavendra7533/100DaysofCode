@@ -70,8 +70,23 @@ class BrowserManager:
             'AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36'
         )
 
-        service = ChromeService(ChromeDriverManager().install())
-        self.driver = webdriver.Chrome(service=service, options=options)
+        try:
+            # Try using webdriver-manager
+            driver_path = ChromeDriverManager().install()
+            # Fix path if it points to wrong file
+            if 'THIRD_PARTY' in driver_path:
+                import os
+                driver_dir = os.path.dirname(driver_path)
+                for f in os.listdir(driver_dir):
+                    if f == 'chromedriver' or f == 'chromedriver.exe':
+                        driver_path = os.path.join(driver_dir, f)
+                        break
+            service = ChromeService(driver_path)
+            self.driver = webdriver.Chrome(service=service, options=options)
+        except Exception as e:
+            logger.error(f"Error with webdriver-manager: {e}")
+            # Fallback: try without specifying service (uses system chromedriver)
+            self.driver = webdriver.Chrome(options=options)
 
         # Remove webdriver flag
         self.driver.execute_script(
